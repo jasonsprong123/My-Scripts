@@ -3,7 +3,7 @@ Hello. This code is written Python -3.6 using EbaySDK .
 Author: Jason Sprong
 Date: Aug15 2017
 I'm working on incorporating a GUI to wrap this into, next.
-MUST HAVE ebaysdk installed! 
+MUST HAVE ebaysdk installed!
 MUST have an ebay APP_ID to run.
 """
 try:
@@ -21,16 +21,22 @@ if itemcond == "USED":
     itemcond2 = "Used"
 else:
     itemcond2 = "New"
-api = finding(siteid='EBAY-US', appid='<MY ebay APP_ID>')
+
+api = finding(siteid='EBAY-US', appid='JasonSpr-PythonPr-PRD-98e2d25a0-4b16fb56')
+"""APP_ID is free at
+'https://developer.ebay.com/my/keys'
+"""
+
 api.execute('findItemsAdvanced', {
-    'keywords': input1+","+input2,                    ##I want to find a way to make it user-input from the GUI
+    'keywords': input1+","+input2,         ##I want to find a way to make it user-input from the GUI
+    # 'categoryId' : ['177', '111422'],           ## category necessary??
     'itemFilter': [
         {'name': 'Condition', 'value': itemcond2},
         {'name': 'MinPrice', 'value': mincost, 'paramName': 'Currency', 'paramValue': 'GBP'}, ## min price make it a user variable
         {'name': 'MaxPrice', 'value': maxcost, 'paramName': 'Currency', 'paramValue': 'GBP'}  ## max price make it a user variable
     ],
     'paginationInput': {
-        'entriesPerPage': '25',                     ##scale-back for GUI?
+        'entriesPerPage': '25',       ##scale-back for GUI?
         'pageNumber': '1'
     },
     'sortOrder': 'CurrentPriceHighest'
@@ -40,13 +46,30 @@ api.execute('findItemsAdvanced', {
 dictstr = api.response.dict()
 # print (dictstr)
 # quit()
+if dictstr['paginationOutput']['totalEntries']=='0':
+    print ("\nThere are no valid items in the search response \n...based on your search terms\n\nPlease try again?")
+    quit()
+else:
+    for item in dictstr['searchResult']['item']:
+        print ("\nItemID: %s" % item['itemId'])
+        print ("Title: %s" % item['title'])
+        print (">>the Current price of item is $%s" %item['sellingStatus']['currentPrice']['value'])
+        # print ("the 'buy it now' price is $%s" %item['convertedBuyItNowPrice']['value'])
+        print ("Item Url: %s\n" % item['viewItemURL'])
+"""
+Some other /print/ options available with "searchResult":
 
-for item in dictstr['searchResult']['item']:
-    print ("\nItemID: %s" % item['itemId'])
-    print ("Title: %s" % item['title'])
-    print (">>the Current price of item is $%s" %item['sellingStatus']['currentPrice']['value'])
-    print ("Item Url: %s\n" % item['viewItemURL'])
-
+        'globalId'
+        'condition'
+        'primaryCategory[categoryId][categoryName]'
+        'galleryURL'
+        'postalCode'
+        'location'
+        'country'
+        'sellingStatus' (ie "currentPrice" and "timeLeft")
+        'bidCount'
+        ...etc...
+"""
 ###################################################################################################
 
-        ## Try beautiful Soup for output options?? 
+        ## Try beautiful Soup for output options??
