@@ -1,11 +1,15 @@
 """
 Hello. This code is written Python -3.6 using EbaySDK .
-User enters search parameters, app returns 25 matching items with price and description.
 Author: Jason Sprong
 Date: Aug15 2017
 I'm working on incorporating a GUI to wrap this into, next.
+MUST HAVE ebaysdk installed! 
+MUST have an ebay APP_ID to run.
 """
-from ebaysdk.finding import Connection as finding
+try:
+    from ebaysdk.finding import Connection as finding
+except ImportError:
+    raise (ImportError,"The ebaysdk module is required to run this program.")
 
 input1 = input("give one search term: \n")
 input2 = input("give one more search term: \n")
@@ -17,7 +21,7 @@ if itemcond == "USED":
     itemcond2 = "Used"
 else:
     itemcond2 = "New"
-api = finding(siteid='EBAY-US', appid='<MY APP ID>')
+api = finding(siteid='EBAY-US', appid='<MY ebay APP_ID>')
 api.execute('findItemsAdvanced', {
     'keywords': input1+","+input2,                    ##I want to find a way to make it user-input from the GUI
     'itemFilter': [
