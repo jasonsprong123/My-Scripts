@@ -20,7 +20,6 @@ else:
 api = finding(siteid='EBAY-US', appid='<MY APP ID>')
 api.execute('findItemsAdvanced', {
     'keywords': input1+","+input2,                    ##I want to find a way to make it user-input from the GUI
-    # 'categoryId' : ['177', '111422'],                ## category necessary??
     'itemFilter': [
         {'name': 'Condition', 'value': itemcond2},
         {'name': 'MinPrice', 'value': mincost, 'paramName': 'Currency', 'paramValue': 'GBP'}, ## min price make it a user variable
